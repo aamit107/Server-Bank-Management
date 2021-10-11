@@ -33,6 +33,7 @@ public class Account implements Serializable {
 
     void deposit(String from, String to, double credit) {
         balance += credit;
+        System.out.println(balance);
         addStatement(from, to, "deposit", credit);
     }
 

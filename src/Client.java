@@ -41,7 +41,7 @@ public class Client implements Runnable {
                     String phoneNumberFrom = reader.readLine();
                     String phoneNumberTo = reader.readLine();
                     double credit = Double.parseDouble(reader.readLine());
-
+                    System.out.println(phoneNumberFrom+" "+phoneNumberTo+" "+credit);
                     deposit(phoneNumberFrom, phoneNumberTo, credit);
                 }
 
@@ -50,6 +50,23 @@ public class Client implements Runnable {
                     double credit = Double.parseDouble(reader.readLine());
 
                     withdraw(phoneNumber, credit);
+                }
+
+                if (data.equals("fetchInfo")) {
+                    String phone = reader.readLine();
+
+                    sendInfo(phone);
+
+                }
+
+                if (data.equals("sendMoney")) {
+                    String from = reader.readLine();
+                    String to = reader.readLine();
+                    String amount = reader.readLine();
+                    double credit = Double.parseDouble(amount);
+
+                    withdraw(from, credit);
+                    deposit(from, to, credit);
                 }
 
             } catch (Exception e) {
@@ -81,11 +98,13 @@ public class Client implements Runnable {
         ObjectInputStream inputStream = new ObjectInputStream(stream2);
 
         ArrayList<Account> list = (ArrayList<Account>) inputStream.readObject();
+        inputStream.close();
 
         for (Account account : list) {
 //            for receiver to have track
             if (account.phoneNumber.equals(phoneNumberTo)) {
                 account.deposit(phoneNumberFrom, phoneNumberTo, credit);
+                System.out.println(account.balance);
             }
 
 //            for sender to have the track
@@ -93,6 +112,21 @@ public class Client implements Runnable {
                 account.addStatement(phoneNumberFrom, phoneNumberTo, "deposit", credit);
             }
         }
+
+        File f = new File("src/accountInfo.txt");
+        FileWriter fr = new FileWriter(f);
+        BufferedWriter br = new BufferedWriter(fr);
+        br.write("");
+
+        for (Account account : list) {
+//            for receiver to have track
+
+            System.out.println("check "+account.name+" "+account.phoneNumber+" "+account.balance);
+        }
+//        FileOutputStream stream = new FileOutputStream("src/accountInfo.txt");
+//        ObjectOutputStream out = new ObjectOutputStream(stream);
+//        out.writeObject(list);
+//        out.close();
 
     }
 
@@ -130,4 +164,47 @@ public class Client implements Runnable {
 //        System.out.println("account added.");
         reader.close();
     }
+
+    void sendInfo(String phone) throws IOException, ClassNotFoundException {
+        FileInputStream stream = new FileInputStream("src/accountInfo.txt");
+        ObjectInputStream inputStream = new ObjectInputStream(stream);
+
+        ArrayList<Account> list;
+        list = (ArrayList<Account>) inputStream.readObject();
+        for (int i=0; i< list.size(); i++){
+            if(list.get(i).phoneNumber.equals(phone)){
+                writer.write(list.get(i).name+"\n");
+                writer.flush();
+
+                writer.write(list.get(i).balance+"\n");
+                writer.flush();
+
+                writer.write(list.get(i).password+"\n");
+                writer.flush();
+
+
+                for(int j=0; j<list.get(i).statements.size(); j++){
+                    String s1 = list.get(i).statements.get(j).from;
+                    String s2 = list.get(i).statements.get(j).to;
+                    String s3 = list.get(i).statements.get(j).type;
+                    String s4 = list.get(i).statements.get(j).credit+"";
+
+                    String s;
+
+                    if(s3.equals("withdrawal")){
+                        s = s3 + " " + s4;
+                    }
+                    else s =  s3+ " From " + s1+ " to " + s2+ " credit " + s4;
+
+                    writer.write(s+"\n");
+                    writer.flush();
+                }
+                break;
+            }
+        }
+
+        writer.write("exit\n");
+        writer.flush();
+    }
+
 }
