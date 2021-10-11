@@ -1,14 +1,13 @@
 package trashBucket;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
+import java.util.ArrayList;
 
 public class t1 {
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src/accountInfo.txt"));
-        if (reader.readLine() == null) {
-            System.out.println("file is empty.");
-        }
+        FileInputStream stream = new FileInputStream("src/accountInfo.txt");
+        ObjectInputStream inputStream = new ObjectInputStream(stream);
+
     }
 }

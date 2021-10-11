@@ -94,8 +94,8 @@ public class Client implements Runnable {
     }
 
     private void deposit(String phoneNumberFrom, String phoneNumberTo, double credit) throws IOException, ClassNotFoundException {
-        FileInputStream stream2 = new FileInputStream("src/accountInfo.txt");
-        ObjectInputStream inputStream = new ObjectInputStream(stream2);
+        FileInputStream fileInputStream = new FileInputStream("src/accountInfo.txt");
+        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
 
         ArrayList<Account> list = (ArrayList<Account>) inputStream.readObject();
         inputStream.close();
@@ -113,21 +113,11 @@ public class Client implements Runnable {
             }
         }
 
-        File f = new File("src/accountInfo.txt");
-        FileWriter fr = new FileWriter(f);
-        BufferedWriter br = new BufferedWriter(fr);
-        br.write("");
+        FileOutputStream stream = new FileOutputStream("src/accountInfo.txt");
+        ObjectOutputStream outputStream = new ObjectOutputStream(stream);
 
-        for (Account account : list) {
-//            for receiver to have track
-
-            System.out.println("check "+account.name+" "+account.phoneNumber+" "+account.balance);
-        }
-//        FileOutputStream stream = new FileOutputStream("src/accountInfo.txt");
-//        ObjectOutputStream out = new ObjectOutputStream(stream);
-//        out.writeObject(list);
-//        out.close();
-
+        outputStream.writeObject(list);
+        outputStream.close();
     }
 
     void addAccount(Account account) throws IOException, ClassNotFoundException {
@@ -151,10 +141,7 @@ public class Client implements Runnable {
         }
 
         FileOutputStream stream = new FileOutputStream("src/accountInfo.txt");
-//        System.out.println("at line 131");
-
         ObjectOutputStream outputStream = new ObjectOutputStream(stream);
-//        System.out.println("at line 134");
 
         list.add(account);
 
@@ -171,32 +158,33 @@ public class Client implements Runnable {
 
         ArrayList<Account> list;
         list = (ArrayList<Account>) inputStream.readObject();
-        for (int i=0; i< list.size(); i++){
-            if(list.get(i).phoneNumber.equals(phone)){
-                writer.write(list.get(i).name+"\n");
+        for (Account account : list) {
+            if (account.phoneNumber.equals(phone)) {
+                writer.write(account.name + "\n");
                 writer.flush();
 
-                writer.write(list.get(i).balance+"\n");
+                writer.write(account.balance + "\n");
                 writer.flush();
 
-                writer.write(list.get(i).password+"\n");
+                writer.write(account.password + "\n");
                 writer.flush();
 
 
-                for(int j=0; j<list.get(i).statements.size(); j++){
-                    String s1 = list.get(i).statements.get(j).from;
-                    String s2 = list.get(i).statements.get(j).to;
-                    String s3 = list.get(i).statements.get(j).type;
-                    String s4 = list.get(i).statements.get(j).credit+"";
+                for (int j = 0; j < account.statements.size(); j++) {
+                    String s1 = account.statements.get(j).from;
+                    String s2 = account.statements.get(j).to;
+                    String s3 = account.statements.get(j).type;
+                    String s4 = account.statements.get(j).credit + "";
 
                     String s;
 
-                    if(s3.equals("withdrawal")){
+//                    if the statement is for withdrawal
+                    if (s3.equals("withdrawal")) {
                         s = s3 + " " + s4;
                     }
-                    else s =  s3+ " From " + s1+ " to " + s2+ " credit " + s4;
+                    else s = s3 + " From " + s1 + " to " + s2 + " credit " + s4;
 
-                    writer.write(s+"\n");
+                    writer.write(s + "\n");
                     writer.flush();
                 }
                 break;

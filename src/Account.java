@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
-class Statements {
+class Statements implements Serializable{
     String from;
     String to;
     String type;
