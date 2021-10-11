@@ -27,8 +27,6 @@ public class Client implements Runnable {
                 String data = reader.readLine();
 
                 if (data.equals("addAccount")) {
-//                    System.out.println("came here!! 1");
-
                     String name = reader.readLine();
                     String phoneNumber = reader.readLine();
                     String password = reader.readLine();
@@ -69,8 +67,8 @@ public class Client implements Runnable {
                 }
 
             } catch (Exception e) {
-                System.out.println("Exception Occurred at Server Client");
-
+//                System.out.println("Exception Occurred at Server Client");
+                System.out.println("client left");
                 break;
             }
         }
@@ -125,8 +123,6 @@ public class Client implements Runnable {
     }
 
     void addAccount(Account account) throws IOException, ClassNotFoundException {
-//        System.out.println("came here!! 111");
-
         ArrayList<Account> list;
 
         BufferedReader reader = new BufferedReader(new FileReader("src/accountInfo.txt"));
@@ -141,7 +137,6 @@ public class Client implements Runnable {
             ObjectInputStream inputStream = new ObjectInputStream(stream2);
 
             list = (ArrayList<Account>) inputStream.readObject();
-//            System.out.println("at line 127");
         }
 
         FileOutputStream stream = new FileOutputStream("src/accountInfo.txt");
@@ -185,8 +180,7 @@ public class Client implements Runnable {
 //                    if the statement is for withdrawal
                     if (s3.equals("withdrawal")) {
                         s = s3 + " " + s4;
-                    }
-                    else s = s3 + " From " + s1 + " to " + s2 + " credit " + s4;
+                    } else s = s3 + " From " + s1 + " to " + s2 + " credit " + s4;
 
                     writer.write(s + "\n");
                     writer.flush();

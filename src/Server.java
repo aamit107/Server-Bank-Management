@@ -5,6 +5,7 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(1234);
+        System.out.println("Server waiting ...");
 
         while (true){
             Socket sc = serverSocket.accept();
