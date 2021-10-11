@@ -41,7 +41,6 @@ public class Client implements Runnable {
                     String phoneNumberFrom = reader.readLine();
                     String phoneNumberTo = reader.readLine();
                     double credit = Double.parseDouble(reader.readLine());
-                    System.out.println(phoneNumberFrom+" "+phoneNumberTo+" "+credit);
                     deposit(phoneNumberFrom, phoneNumberTo, credit);
                 }
 
@@ -91,6 +90,12 @@ public class Client implements Runnable {
                 break;
             }
         }
+
+        FileOutputStream stream = new FileOutputStream("src/accountInfo.txt");
+        ObjectOutputStream outputStream = new ObjectOutputStream(stream);
+
+        outputStream.writeObject(list);
+        outputStream.close();
     }
 
     private void deposit(String phoneNumberFrom, String phoneNumberTo, double credit) throws IOException, ClassNotFoundException {
@@ -104,7 +109,6 @@ public class Client implements Runnable {
 //            for receiver to have track
             if (account.phoneNumber.equals(phoneNumberTo)) {
                 account.deposit(phoneNumberFrom, phoneNumberTo, credit);
-                System.out.println(account.balance);
             }
 
 //            for sender to have the track
