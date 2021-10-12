@@ -23,6 +23,7 @@ public class Account implements Serializable {
     ArrayList<Statements> statements;
 
     double balance = 0.0;
+    int numberOfTransaction = 0;
 
     public Account(String name, String phoneNumber, String password) {
         this.name = name;

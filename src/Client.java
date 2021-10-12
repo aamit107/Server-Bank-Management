@@ -53,7 +53,6 @@ public class Client implements Runnable {
                     String phone = reader.readLine();
 
                     sendInfo(phone);
-
                 }
 
                 if (data.equals("sendMoney")) {
@@ -112,6 +111,13 @@ public class Client implements Runnable {
 //            for sender to have the track
             if (account.phoneNumber.equals(phoneNumberFrom)) {
                 account.addStatement(phoneNumberFrom, phoneNumberTo, "deposit", credit);
+                account.numberOfTransaction++;
+
+//                add bonus to the account for every 5 transaction
+                if (account.numberOfTransaction % 5 == 0) {
+                    account.balance += 10;
+                    account.addStatement(null, null, "bonus", 10);
+                }
             }
         }
 
@@ -177,8 +183,8 @@ public class Client implements Runnable {
 
                     String s;
 
-//                    if the statement is for withdrawal
-                    if (s3.equals("withdrawal")) {
+//                    if the statement type is withdrawal or bonus
+                    if (s3.equals("withdrawal") || s3.equals("bonus")) {
                         s = s3 + " " + s4;
                     } else s = s3 + " From " + s1 + " to " + s2 + " credit " + s4;
 
